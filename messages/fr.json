@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "topics": "Thèmes",
+    "dilemma": "Dilemme",
+    "teacher": "Professeur",
+    "logout": "Déconnexion"
+  },
+  "register": {
+    "title": "Bienvenue sur EduÉtica!",
+    "subtitle": "Crée ton profil pour commencer l'aventure",
+    "nameLabel": "Ton prénom ou surnom",
+    "namePlaceholder": "Comment t'appelles-tu?",
+    "establishmentLabel": "Ton établissement",
+    "establishmentPlaceholder": "Nom de ton école",
+    "courseLabel": "Ta classe",
+    "coursePlaceholder": "Ex: 4ème",
+    "ageLabel": "Ton âge",
+    "agePlaceholder": "Entre 8 et 18 ans",
+    "avatarLabel": "Choisis ton avatar",
+    "submitButton": "Commencer l'aventure!",
+    "ageError": "L'âge doit être entre 8 et 18 ans",
+    "requiredError": "Ce champ est obligatoire"
+  },
+  "topics": {
+    "title": "Choisis ton thème de réflexion",
+    "subtitle": "Sélectionne le dilemme éthique que tu veux explorer",
+    "locked": "Bloqué pour ton âge",
+    "lockedAge": "Disponible à partir de 14 ans",
+    "climate": { "name": "Changement Climatique", "desc": "Quelle est notre responsabilité pour l'avenir de la planète?" },
+    "animals": { "name": "Droits des Animaux", "desc": "Les animaux méritent-ils les mêmes droits que les humains?" },
+    "cyberbullying": { "name": "Cyberharcèlement", "desc": "Quelle responsabilité avons-nous dans le monde numérique?" },
+    "justice": { "name": "Justice et Équité", "desc": "Est-ce la même chose d'être juste et équitable?" },
+    "corruption": { "name": "Corruption", "desc": "Quand un acte corrompu cesse-t-il d'être personnel?" },
+    "euthanasia": { "name": "Euthanasie", "desc": "L'être humain a-t-il le droit de décider de la fin de sa vie?" },
+    "abortion": { "name": "Avortement", "desc": "Comment équilibrer les droits dans un dilemme de vie?" },
+    "deathPenalty": { "name": "Peine de Mort", "desc": "L'État peut-il ôter la vie comme forme de justice?" }
+  },
+  "dilemma": {
+    "loading": "Génération de ton dilemme avec l'IA...",
+    "timer": "Temps",
+    "classify": "Classe le comportement:",
+    "moral": "Moral",
+    "inmoral": "Immoral",
+    "amoral": "Amoral",
+    "negligent": "Négligence par volonté paresseuse",
+    "ignorance": "Ignorance surmontable",
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "explanation": "Explication",
+    "next": "Dilemme suivant",
+    "leaderboard": "Classement",
+    "rank": "Pos.",
+    "player": "Joueur",
+    "score": "Points",
+    "time": "Temps"
+  },
+  "teacher": {
+    "title": "Panneau du Professeur",
+    "subtitle": "Suivi en temps réel de tes élèves",
+    "password": "Mot de passe d'accès",
+    "access": "Accéder",
+    "wrongPassword": "Mot de passe incorrect",
+    "student": "Élève",
+    "age": "Âge",
+    "topic": "Thème",
+    "time": "Temps",
+    "dilemmas": "Dilemmes",
+    "correct": "Corrects",
+    "wrong": "Erreurs",
+    "chat": "Chat",
+    "export": "Exporter CSV",
+    "noData": "Aucun élève enregistré pour l'instant"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "back": "Retour",
+    "language": "Langue"
+  }
+}

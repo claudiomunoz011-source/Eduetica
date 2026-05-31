@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Google Fonts ───────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ─── CSS Variables ──────────────────────────────────────── */
+:root {
+  --radius: 12px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-kid: 'Nunito', sans-serif;
+  --font-teen: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+/* ─── KID THEME ──────────────────────────────────────────── */
+[data-theme="kid"] {
+  --bg-primary: #FFF9F0;
+  --bg-secondary: #FFF0D9;
+  --surface: #FFFFFF;
+  --text-primary: #2D2D2D;
+  --text-secondary: #555555;
+  --accent: #FF6B35;
+  --accent-2: #9B5DE5;
+  --accent-3: #4ECDC4;
+  --border: rgba(255, 107, 53, 0.2);
+  --font-family: 'Nunito', sans-serif;
+  --shadow: 0 8px 32px rgba(255, 107, 53, 0.15);
+  --card-bg: #FFFFFF;
+  --btn-primary: linear-gradient(135deg, #FF6B35, #F72585);
+  --btn-hover: linear-gradient(135deg, #F72585, #9B5DE5);
+}
+
+/* ─── TEEN THEME ─────────────────────────────────────────── */
+[data-theme="teen"] {
+  --bg-primary: #0A0A0F;
+  --bg-secondary: #111827;
+  --surface: #1F2937;
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  --accent: #7C3AED;
+  --accent-2: #06B6D4;
+  --accent-3: #A78BFA;
+  --border: rgba(124, 58, 237, 0.3);
+  --font-family: 'Inter', sans-serif;
+  --shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+  --card-bg: #1F2937;
+  --btn-primary: linear-gradient(135deg, #7C3AED, #4F46E5);
+  --btn-hover: linear-gradient(135deg, #4F46E5, #06B6D4);
+}
+
+/* ─── DEFAULT (before registration) ─────────────────────── */
+:root, [data-theme="default"] {
+  --bg-primary: #0A0A0F;
+  --bg-secondary: #111827;
+  --surface: #1F2937;
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  --accent: #7C3AED;
+  --accent-2: #06B6D4;
+  --accent-3: #A78BFA;
+  --border: rgba(124, 58, 237, 0.3);
+  --font-family: 'Inter', sans-serif;
+  --shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+  --card-bg: #1F2937;
+  --btn-primary: linear-gradient(135deg, #7C3AED, #4F46E5);
+  --btn-hover: linear-gradient(135deg, #4F46E5, #06B6D4);
+}
+
+/* ─── Base Styles ────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+/* ─── Glassmorphism Card ─────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+}
+
+[data-theme="kid"] .glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 107, 53, 0.15);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.1);
+}
+
+/* ─── Gradient Text ──────────────────────────────────────── */
+.gradient-text {
+  background: var(--btn-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Primary Button ─────────────────────────────────────── */
+.btn-primary {
+  background: var(--btn-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 28px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ─── Input Fields ───────────────────────────────────────── */
+.input-field {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+[data-theme="kid"] .input-field:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+/* ─── Animated Background ────────────────────────────────── */
+.animated-bg {
+  background: linear-gradient(
+    -45deg,
+    var(--bg-primary),
+    var(--bg-secondary),
+    #1a0a2e,
+    #0a1628
+  );
+  background-size: 400% 400%;
+  animation: gradient 12s ease infinite;
+}
+
+[data-theme="kid"] .animated-bg {
+  background: linear-gradient(
+    -45deg,
+    #FFF9F0,
+    #FFF0D9,
+    #FFE4F0,
+    #E4F5FF
+  );
+  background-size: 400% 400%;
+  animation: gradient 8s ease infinite;
+}
+
+/* ─── Floating particles (kid theme) ────────────────────── */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ─── Card Hover Effect ──────────────────────────────────── */
+.card-hover {
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+}
+
+/* ─── Pulse Glow ─────────────────────────────────────────── */
+.glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ─── Loading Spinner ────────────────────────────────────── */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Kid Bouncy Text ────────────────────────────────────── */
+[data-theme="kid"] h1,
+[data-theme="kid"] h2 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+}
+
+[data-theme="teen"] h1,
+[data-theme="teen"] h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+/* ─── Leaderboard Table ──────────────────────────────────── */
+.leaderboard-row {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all var(--transition);
+  border: 1px solid var(--border);
+}
+
+.leaderboard-row:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.leaderboard-row.rank-1 {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+  border-color: gold;
+}
+
+.leaderboard-row.rank-2 {
+  background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(160, 160, 160, 0.1));
+  border-color: silver;
+}
+
+.leaderboard-row.rank-3 {
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(160, 100, 40, 0.1));
+  border-color: #CD7F32;
+}
+
+/* ─── Classification Buttons ─────────────────────────────── */
+.classify-btn {
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 2px solid transparent;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.classify-btn:hover {
+  transform: translateX(6px);
+}
+
+.classify-btn.moral { background: rgba(6, 214, 160, 0.15); border-color: #06D6A0; color: #06D6A0; }
+.classify-btn.inmoral { background: rgba(247, 37, 133, 0.15); border-color: #F72585; color: #F72585; }
+.classify-btn.amoral { background: rgba(156, 163, 175, 0.15); border-color: #9CA3AF; color: #9CA3AF; }
+.classify-btn.negligente { background: rgba(255, 190, 11, 0.15); border-color: #FFBE0B; color: #FFBE0B; }
+.classify-btn.ignorancia { background: rgba(124, 58, 237, 0.15); border-color: #7C3AED; color: #A78BFA; }
+
+.classify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.classify-btn.selected {
+  transform: scale(0.98);
+}
+
+.classify-btn.correct-answer {
+  background: rgba(6, 214, 160, 0.3) !important;
+  border-color: #06D6A0 !important;
+  box-shadow: 0 0 16px rgba(6, 214, 160, 0.4);
+}
+
+.classify-btn.wrong-answer {
+  background: rgba(247, 37, 133, 0.3) !important;
+  border-color: #F72585 !important;
+}
+
+/* ─── Timer ──────────────────────────────────────────────── */
+.timer-ring {
+  stroke-dasharray: 188.5;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+  stroke: var(--accent);
+}
+
+/* ─── Shimmer loading ────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--bg-secondary) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Avatar Selection ───────────────────────────────────── */
+.avatar-option {
+  border: 3px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition);
+  padding: 4px;
+}
+
+.avatar-option:hover {
+  transform: scale(1.15);
+  border-color: var(--accent);
+}
+
+.avatar-option.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.3);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+[data-theme="kid"] .avatar-option.selected {
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.3);
+}

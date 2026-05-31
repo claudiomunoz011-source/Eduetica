@@ -1,0 +1,106 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "topics": "Temas",
+    "dilemma": "Dilema",
+    "teacher": "Profesor",
+    "logout": "Salir"
+  },
+  "register": {
+    "title": "¡Bienvenido a EduÉtica!",
+    "subtitle": "Crea tu perfil para comenzar la aventura",
+    "nameLabel": "Tu nombre o apodo",
+    "namePlaceholder": "¿Cómo te llaman?",
+    "establishmentLabel": "Tu establecimiento",
+    "establishmentPlaceholder": "Nombre de tu colegio",
+    "courseLabel": "Tu curso",
+    "coursePlaceholder": "Ej: 8° Básico",
+    "ageLabel": "Tu edad",
+    "agePlaceholder": "Entre 8 y 18 años",
+    "avatarLabel": "Elige tu avatar",
+    "submitButton": "¡Comenzar aventura!",
+    "ageError": "La edad debe estar entre 8 y 18 años",
+    "requiredError": "Este campo es obligatorio"
+  },
+  "topics": {
+    "title": "Elige tu tema de reflexión",
+    "subtitle": "Selecciona el dilema ético que quieres explorar",
+    "locked": "Bloqueado para tu edad",
+    "lockedAge": "Disponible desde los 14 años",
+    "climate": {
+      "name": "Cambio Climático",
+      "desc": "¿Cuánto somos responsables del futuro del planeta?"
+    },
+    "animals": {
+      "name": "Derechos de los Animales",
+      "desc": "¿Los animales merecen los mismos derechos que los humanos?"
+    },
+    "cyberbullying": {
+      "name": "Ciberacoso",
+      "desc": "¿Qué responsabilidad tenemos en el mundo digital?"
+    },
+    "justice": {
+      "name": "Justicia y Equidad",
+      "desc": "¿Es lo mismo ser justo que ser equitativo?"
+    },
+    "corruption": {
+      "name": "Corrupción",
+      "desc": "¿Cuándo un acto corrupto deja de ser personal para volverse social?"
+    },
+    "euthanasia": {
+      "name": "Eutanasia",
+      "desc": "¿Tiene el ser humano derecho a decidir el fin de su vida?"
+    },
+    "abortion": {
+      "name": "Aborto",
+      "desc": "¿Cómo se equilibran los derechos en un dilema de vida?"
+    },
+    "deathPenalty": {
+      "name": "Pena de Muerte",
+      "desc": "¿Puede el Estado quitar la vida como forma de justicia?"
+    }
+  },
+  "dilemma": {
+    "loading": "Generando tu dilema con IA...",
+    "timer": "Tiempo",
+    "classify": "Clasifica la conducta:",
+    "moral": "Moral",
+    "inmoral": "Inmoral",
+    "amoral": "Amoral",
+    "negligent": "Negligencia por Voluntad Perezosa",
+    "ignorance": "Ignorancia Vencible",
+    "correct": "¡Correcto!",
+    "incorrect": "Incorrecto",
+    "explanation": "Explicación",
+    "next": "Siguiente dilema",
+    "leaderboard": "Clasificación",
+    "rank": "Pos.",
+    "player": "Jugador",
+    "score": "Aciertos",
+    "time": "Tiempo"
+  },
+  "teacher": {
+    "title": "Panel del Profesor",
+    "subtitle": "Seguimiento en tiempo real de tus estudiantes",
+    "password": "Contraseña de acceso",
+    "access": "Ingresar",
+    "wrongPassword": "Contraseña incorrecta",
+    "student": "Estudiante",
+    "age": "Edad",
+    "topic": "Tema",
+    "time": "Tiempo",
+    "dilemmas": "Dilemas",
+    "correct": "Aciertos",
+    "wrong": "Errores",
+    "chat": "Chat",
+    "export": "Exportar CSV",
+    "noData": "No hay estudiantes registrados aún"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "language": "Idioma"
+  }
+}

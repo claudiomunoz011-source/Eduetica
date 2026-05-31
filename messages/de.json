@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "topics": "Themen",
+    "dilemma": "Dilemma",
+    "teacher": "Lehrer",
+    "logout": "Abmelden"
+  },
+  "register": {
+    "title": "Willkommen bei EduÉtica!",
+    "subtitle": "Erstelle dein Profil, um das Abenteuer zu beginnen",
+    "nameLabel": "Dein Name oder Spitzname",
+    "namePlaceholder": "Wie heißt du?",
+    "establishmentLabel": "Deine Schule",
+    "establishmentPlaceholder": "Name deiner Schule",
+    "courseLabel": "Deine Klasse",
+    "coursePlaceholder": "z.B. 8. Klasse",
+    "ageLabel": "Dein Alter",
+    "agePlaceholder": "Zwischen 8 und 18 Jahren",
+    "avatarLabel": "Wähle deinen Avatar",
+    "submitButton": "Abenteuer beginnen!",
+    "ageError": "Das Alter muss zwischen 8 und 18 Jahren liegen",
+    "requiredError": "Dieses Feld ist erforderlich"
+  },
+  "topics": {
+    "title": "Wähle dein Reflexionsthema",
+    "subtitle": "Wähle das ethische Dilemma, das du erkunden möchtest",
+    "locked": "Für dein Alter gesperrt",
+    "lockedAge": "Verfügbar ab 14 Jahren",
+    "climate": { "name": "Klimawandel", "desc": "Wie viel Verantwortung tragen wir für die Zukunft des Planeten?" },
+    "animals": { "name": "Tierrechte", "desc": "Verdienen Tiere die gleichen Rechte wie Menschen?" },
+    "cyberbullying": { "name": "Cybermobbing", "desc": "Welche Verantwortung tragen wir in der digitalen Welt?" },
+    "justice": { "name": "Gerechtigkeit und Gleichheit", "desc": "Ist es dasselbe, gerecht und fair zu sein?" },
+    "corruption": { "name": "Korruption", "desc": "Wann hört korruptes Handeln auf, persönlich zu sein?" },
+    "euthanasia": { "name": "Euthanasie", "desc": "Hat der Mensch das Recht, über sein Lebensende zu entscheiden?" },
+    "abortion": { "name": "Abtreibung", "desc": "Wie werden Rechte in einem Lebensdilemma abgewogen?" },
+    "deathPenalty": { "name": "Todesstrafe", "desc": "Kann der Staat als Gerechtigkeit töten?" }
+  },
+  "dilemma": {
+    "loading": "Dein Dilemma wird mit KI generiert...",
+    "timer": "Zeit",
+    "classify": "Klassifiziere das Verhalten:",
+    "moral": "Moralisch",
+    "inmoral": "Unmoralisch",
+    "amoral": "Amoralisch",
+    "negligent": "Fahrlässigkeit durch faulen Willen",
+    "ignorance": "Besiegbare Unwissenheit",
+    "correct": "Richtig!",
+    "incorrect": "Falsch",
+    "explanation": "Erklärung",
+    "next": "Nächstes Dilemma",
+    "leaderboard": "Rangliste",
+    "rank": "Platz",
+    "player": "Spieler",
+    "score": "Punkte",
+    "time": "Zeit"
+  },
+  "teacher": {
+    "title": "Lehrerpanel",
+    "subtitle": "Echtzeit-Verfolgung deiner Schüler",
+    "password": "Zugangspasswort",
+    "access": "Einloggen",
+    "wrongPassword": "Falsches Passwort",
+    "student": "Schüler",
+    "age": "Alter",
+    "topic": "Thema",
+    "time": "Zeit",
+    "dilemmas": "Dilemmata",
+    "correct": "Richtig",
+    "wrong": "Falsch",
+    "chat": "Chat",
+    "export": "CSV exportieren",
+    "noData": "Noch keine Schüler registriert"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "retry": "Wiederholen",
+    "back": "Zurück",
+    "language": "Sprache"
+  }
+}

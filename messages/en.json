@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "home": "Home",
+    "topics": "Topics",
+    "dilemma": "Dilemma",
+    "teacher": "Teacher",
+    "logout": "Log out"
+  },
+  "register": {
+    "title": "Welcome to EduÉtica!",
+    "subtitle": "Create your profile to start the adventure",
+    "nameLabel": "Your name or nickname",
+    "namePlaceholder": "What do they call you?",
+    "establishmentLabel": "Your school",
+    "establishmentPlaceholder": "Name of your school",
+    "courseLabel": "Your class / grade",
+    "coursePlaceholder": "e.g. 8th Grade",
+    "ageLabel": "Your age",
+    "agePlaceholder": "Between 8 and 18 years",
+    "avatarLabel": "Choose your avatar",
+    "submitButton": "Start the adventure!",
+    "ageError": "Age must be between 8 and 18",
+    "requiredError": "This field is required"
+  },
+  "topics": {
+    "title": "Choose your reflection topic",
+    "subtitle": "Select the ethical dilemma you want to explore",
+    "locked": "Locked for your age",
+    "lockedAge": "Available from age 14",
+    "climate": { "name": "Climate Change", "desc": "How much are we responsible for the planet's future?" },
+    "animals": { "name": "Animal Rights", "desc": "Do animals deserve the same rights as humans?" },
+    "cyberbullying": { "name": "Cyberbullying", "desc": "What responsibility do we have in the digital world?" },
+    "justice": { "name": "Justice and Equity", "desc": "Is being fair the same as being equitable?" },
+    "corruption": { "name": "Corruption", "desc": "When does a corrupt act stop being personal and become social?" },
+    "euthanasia": { "name": "Euthanasia", "desc": "Does a human being have the right to decide the end of their life?" },
+    "abortion": { "name": "Abortion", "desc": "How do we balance rights in a life dilemma?" },
+    "deathPenalty": { "name": "Death Penalty", "desc": "Can the State take a life as a form of justice?" }
+  },
+  "dilemma": {
+    "loading": "Generating your dilemma with AI...",
+    "timer": "Time",
+    "classify": "Classify the conduct:",
+    "moral": "Moral",
+    "inmoral": "Immoral",
+    "amoral": "Amoral",
+    "negligent": "Negligence by Lazy Will",
+    "ignorance": "Vincible Ignorance",
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "explanation": "Explanation",
+    "next": "Next dilemma",
+    "leaderboard": "Leaderboard",
+    "rank": "Rank",
+    "player": "Player",
+    "score": "Score",
+    "time": "Time"
+  },
+  "teacher": {
+    "title": "Teacher Dashboard",
+    "subtitle": "Real-time tracking of your students",
+    "password": "Access password",
+    "access": "Login",
+    "wrongPassword": "Wrong password",
+    "student": "Student",
+    "age": "Age",
+    "topic": "Topic",
+    "time": "Time",
+    "dilemmas": "Dilemmas",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "chat": "Chat",
+    "export": "Export CSV",
+    "noData": "No students registered yet"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "back": "Back",
+    "language": "Language"
+  }
+}
