@@ -214,7 +214,7 @@ export async function generateSocraticResponse(params: {
     if (params.turnNumber >= 6) {
       // Force final verdict at turn 6
       systemInstructions = `
-You are a Socratic ethics tutor and logic teacher. This is the FINAL VERDICT (maximum turns reached).
+You are a Socratic ethics tutor and a firm, direct logic teacher. This is the FINAL VERDICT.
 ${tutorInstructions}
 ${ragSection}
 
@@ -228,15 +228,15 @@ Strict ethical definitions to apply:
 The student originally classified the conduct as: "${ANSWER_LABELS[params.selectedAnswer]}"
 The correct classification is: "${ANSWER_LABELS[params.correctAnswer]}"
 
-Now, act as a logic teacher and deliver the final verdict:
-1. Provide a final evaluation of the student's arguments across the dialogue.
-2. In your response, clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it directly with their choice if they were wrong.
-3. Keep an encouraging but clear educational tone.
-4. Write in ${langName}.
-5. Match the vocabulary level: ${label}.
+Now, act as a firm, clear, and direct logic teacher and deliver the final verdict:
+1. Critical Argument Evaluation: Do NOT just look at whether the student selected the correct button. Carefully review the student's messages in the history. Evaluate if their reasoning was coherent, logical, and relevant to the dilemma.
+2. Be Direct and Honest (No Condescension): If the student's arguments were lazy, short, incoherent, or irrelevant, state this directly and clearly (e.g. "Aunque acertaste en la clasificación de la conducta, tu justificación ha sido débil e incoherente porque..."). Do NOT say "lo hiciste muy bien" or praise them unless their arguments were actually logical, relevant, and well-grounded.
+3. In your response, clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it with their arguments, showing them the logic gaps or fallacies in their reasoning.
+4. Keep a serious, firm, and educational tone.
+5. Write in ${langName} matching the vocabulary level: ${label}.
 
 Evaluate: based on the entire dialogue, did the student demonstrate a clear understanding of the concept?
-Set "understood": true if the student showed genuine comprehension in their arguments (even if they initially chose wrong).
+Set "understood": true ONLY if the student showed genuine comprehension and logic in their arguments. If their arguments were lazy, weak, or incoherent, set "understood": false.
 Set "student_was_correct": true if their ORIGINAL selected answer matches the correct answer.
 
 Respond ONLY with valid JSON:
@@ -250,7 +250,7 @@ Respond ONLY with valid JSON:
       // Force Socratic question (turns 1, 2, 3)
       const isTurn1 = params.turnNumber === 1;
       systemInstructions = `
-You are a Socratic ethics tutor and logic teacher. This is Turn ${params.turnNumber} of the dialogue.
+You are a Socratic ethics tutor and a firm, direct logic teacher. This is Turn ${params.turnNumber} of the dialogue.
 ${tutorInstructions}
 ${ragSection}
 
@@ -266,7 +266,8 @@ ${isTurn1 ? `
 - Ask the FIRST probing question to get the student to justify their decision. Ask them to explain the reasoning, intent, or principles behind their choice.
 ` : `
 - Read the student's latest message: "${params.studentMessage}"
-- First, write a brief comment (1-2 sentences) evaluating the logical validity of their argument. Point out if it is logically sound (solid) or if there are weaknesses, contradictions, fallacies, or gaps in their reasoning (weak). Act as an educational logic teacher helping them learn how to construct solid arguments.
+- First, write a clear, direct comment (1-2 sentences) evaluating the logical validity and relevance of their argument. 
+- Do NOT be condescending. If their response is lazy, short, incoherent, nonsense, or avoids the question, call it out directly and explain why it is logically weak or irrelevant. Be firm and educational so they learn from the error. If it is solid, briefly explain why.
 - Then, ask a coherent follow-up question that builds on their response and challenges them to think deeper or distinguish key concepts (e.g. active malice vs. laziness of will, or consequences vs. intent).
 `}
 
@@ -286,7 +287,7 @@ Respond ONLY with valid JSON:
     } else {
       // Dynamic Turn 4 or 5: The tutor can choose to continue (ask next question) or finalize (give verdict)
       systemInstructions = `
-You are a Socratic ethics tutor and logic teacher. This is Turn ${params.turnNumber} (dynamic choice to continue or finalize).
+You are a Socratic ethics tutor and a firm, direct logic teacher. This is Turn ${params.turnNumber} (dynamic choice to continue or finalize).
 ${tutorInstructions}
 ${ragSection}
 
@@ -307,10 +308,15 @@ STUDENT'S LATEST MESSAGE: "${params.studentMessage}"
 
 YOUR DYNAMIC CHOICE:
 Evaluate the student's argument. You can choose to EITHER:
-A) Continue the dialogue (if you feel a further question would help their learning, or if their reasoning is still incomplete/needs challenge).
-   In this case, set "is_final": false. Write a brief comment on the logic of their argument (solid or weak) and ask the next probing question.
-B) Finalize the dialogue (if they have successfully justified their answer, or if they are stuck/repeating themselves and further turns won't help).
-   In this case, set "is_final": true. Deliver the final verdict: clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it with their choice. Evaluate "understood": true/false based on their reasoning.
+A) Continue the dialogue (if you feel a further question is needed to challenge their logic, or if their reasoning is still incomplete/needs guidance).
+   In this case, set "is_final": false. Write a firm comment on the logic of their argument (solid or weak, pointing out fallacies or gaps) and ask the next probing question. Do NOT be condescending.
+B) Finalize the dialogue (if they have successfully justified their answer, OR if they are stuck/repeating themselves/lazy and further turns won't help).
+   In this case, set "is_final": true. Deliver the final verdict:
+   1. Critical Argument Evaluation: Evaluate if their reasoning was coherent, logical, and relevant to the dilemma.
+   2. Be Direct and Honest (No Condescension): If the student's arguments were lazy, short, incoherent, or irrelevant, state this directly and clearly (e.g. "Aunque acertaste en la clasificación de la conducta, tu justificación ha sido débil e incoherente porque..."). Do NOT say "lo hiciste muy bien" or praise them unless their arguments were actually logical.
+   3. In your response, clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it with their arguments, showing them the logic gaps or fallacies in their reasoning.
+   4. Keep a serious, firm, and educational tone.
+   Evaluate "understood": true/false based strictly on their reasoning. If their reasoning was lazy, weak, or incoherent, set "understood": false.
 
 Write in ${langName} matching the vocabulary level: ${label}.
 
@@ -428,6 +434,98 @@ export const FALLBACK_POOL: Record<string, GeneratedDilemma[]> = {
       correct_answer: 'moral',
       explanation: 'El profesor actúa de forma moral y equitativa: identifica una desigualdad y busca una alternativa concreta de apoyo para restablecer la justicia y la igualdad de oportunidades.',
       options_hint: 'El profesor aplica equidad para dar a su alumno lo que necesita para competir en igualdad.',
+    }
+  ],
+  corruption: [
+    {
+      scenario: 'Sofía, una inspectora municipal, descubre que el restaurante de un amigo cercano no cumple con las normas de seguridad contra incendios. A pesar del afecto y de que su amigo le pide omitirlo, emite la sanción y exige las reparaciones pertinentes.',
+      question: '¿Cómo clasificarías la conducta de Sofía?',
+      correct_answer: 'moral',
+      explanation: 'Sofía actúa moralmente al anteponer la seguridad pública y sus deberes oficiales por sobre su interés personal y su relación de amistad.',
+      options_hint: 'El deber público y la seguridad general deben prevalecer sobre el afecto personal.',
+    },
+    {
+      scenario: 'Un concejal nota que un contrato de pavimentación vial tiene claros indicios de fraude y sobreprecio. Decide no denunciarlo ni investigar porque teme que esto le cause problemas con su propio partido político.',
+      question: '¿Cómo clasificarías la conducta del concejal?',
+      correct_answer: 'negligente',
+      explanation: 'El concejal actúa con negligencia por voluntad perezosa: conoce su deber fiscalizador y tiene los medios, pero prefiere no actuar para evitarse conflictos o esfuerzos.',
+      options_hint: 'El concejal prefiere su tranquilidad y comodidad personal antes que cumplir con su deber oficial.',
+    },
+    {
+      scenario: 'Un director de obras públicas acepta un soborno millonario de una constructora para adjudicarles una licitación y aprobar materiales de baja calidad en una escuela pública.',
+      question: '¿Cómo clasificarías la conducta del director?',
+      correct_answer: 'inmoral',
+      explanation: 'El director actúa inmoralmente al recibir un beneficio personal ilícito a sabiendas de que esto daña el erario público y pone en riesgo a la comunidad escolar.',
+      options_hint: 'Es una acción deliberada de corrupción que busca el beneficio egoísta mediante el daño al bien común.',
+    }
+  ],
+  euthanasia: [
+    {
+      scenario: 'El abuelo de Elena padece una enfermedad terminal sumamente dolorosa. Le ruega a Elena y a los médicos que le apliquen la eutanasia legal en su país. Elena, tras reflexionar con compasión, decide apoyar y acompañar la decisión de su abuelo.',
+      question: '¿Cómo clasificarías la conducta de Elena?',
+      correct_answer: 'moral',
+      explanation: 'Elena actúa de manera moral bajo los principios de compasión y respeto a la autonomía de su abuelo frente a un sufrimiento extremo e irreversible.',
+      options_hint: 'Considera el respeto a la libre decisión del abuelo y el deseo de aliviar su dolor insoportable.',
+    },
+    {
+      scenario: 'Un enfermero ve que un paciente terminal tiene dolor agudo. Sabe que hay analgésicos recetados listos, pero decide esperar al cambio de turno para que el siguiente enfermero lo administre, evitando así realizar el papeleo de control.',
+      question: '¿Cómo clasificarías la conducta del enfermero?',
+      correct_answer: 'negligente',
+      explanation: 'El enfermero actúa con negligencia por voluntad perezosa: sabe de su deber de aliviar el dolor y tiene los medicamentos, pero lo omite por mera pereza o comodidad administrativa.',
+      options_hint: 'El enfermero sabe lo que es correcto pero prefiere evitar el esfuerzo físico e inmediato.',
+    },
+    {
+      scenario: 'Un médico administra una dosis letal a un paciente en coma sin consentimiento previo, sin consultar a los familiares ni realizar las juntas éticas, argumentando de forma egoísta que "ese paciente solo consume recursos".',
+      question: '¿Cómo clasificarías la conducta del médico?',
+      correct_answer: 'inmoral',
+      explanation: 'El médico actúa de forma inmoral al decidir de manera unilateral y arbitraria terminar con la vida de una persona sin su consentimiento ni apego a ningún marco ético o legal.',
+      options_hint: 'El médico actúa con dolo y desprecio a la vida humana y la autonomía del paciente.',
+    }
+  ],
+  abortion: [
+    {
+      scenario: 'Una obstetra interrumpe terapéuticamente el embarazo de una paciente con un embarazo ectópico roto que pone en peligro inminente su vida, aplicando rigurosamente los protocolos éticos y médicos de urgencia.',
+      question: '¿Cómo clasificarías la conducta de la obstetra?',
+      correct_answer: 'moral',
+      explanation: 'La médica actúa de manera moral y justificada al intervenir para salvar la vida de la madre mediante un procedimiento médico necesario y regulado.',
+      options_hint: 'Es una acción médica de emergencia orientada a salvar la vida de la paciente bajo la norma ética.',
+    },
+    {
+      scenario: 'Un ginecólogo de guardia nota que una paciente requiere una derivación urgente para evaluar una interrupción legal de su embarazo. Para no llenar los formularios de derivación y terminar su turno a tiempo, decide ignorar la solicitud.',
+      question: '¿Cómo clasificarías la conducta del ginecólogo?',
+      correct_answer: 'negligente',
+      explanation: 'El médico actúa por negligencia por voluntad perezosa: conoce su deber oficial de derivar a la paciente pero prefiere omitir la tarea por mera comodidad personal y descanso.',
+      options_hint: 'El ginecólogo posterga su deber profesional y legal por pereza administrativa.',
+    },
+    {
+      scenario: 'Un farmacéutico vende pastillas abortivas falsificadas y peligrosas a mujeres con embarazos no deseados a precios elevados, sabiendo que el producto es tóxico y que no contarán con asistencia médica.',
+      question: '¿Cómo clasificarías la conducta del farmacéutico?',
+      correct_answer: 'inmoral',
+      explanation: 'El farmacéutico actúa de manera inmoral al lucrar de forma deliberada con la vulnerabilidad ajena a sabiendas de que causa un daño grave a la salud física.',
+      options_hint: 'Existe una intención directa de lucrar sabiendo que se atenta contra el bienestar de otra persona.',
+    }
+  ],
+  deathPenalty: [
+    {
+      scenario: 'Un magistrado aplica rigurosamente la constitución del país que prohíbe la pena de muerte, garantizando que un condenado por delitos graves reciba cadena perpetua en lugar de ser ejecutado por el Estado.',
+      question: '¿Cómo clasificarías la conducta del magistrado?',
+      correct_answer: 'moral',
+      explanation: 'El magistrado actúa de forma moral al regirse por el derecho a la vida y los marcos jurídicos de derechos humanos aplicables en su territorio.',
+      options_hint: 'El juez resguarda los principios del derecho a la vida y el orden constitucional establecido.',
+    },
+    {
+      scenario: 'Un verdugo estatal ejecuta a un reo a sabiendas de que su apelación final aún no ha sido revisada, simplemente porque quería terminar temprano su jornada laboral para ir a una reunión social.',
+      question: '¿Cómo clasificarías la conducta del verdugo?',
+      correct_answer: 'inmoral',
+      explanation: 'El verdugo actúa de manera inmoral al atentar de forma consciente contra la vida del recluso violando el debido proceso y mostrando desprecio por la justicia.',
+      options_hint: 'Hay dolo y una violación directa del derecho a la vida y las normas básicas de justicia.',
+    },
+    {
+      scenario: 'Un abogado defensor asignado de oficio a un caso de pena de muerte decide no presentar un recurso de clemencia crítico porque la fecha de entrega coincide con su fin de semana de vacaciones y prefiere no trabajar horas extras.',
+      question: '¿Cómo clasificarías la conducta del abogado?',
+      correct_answer: 'negligente',
+      explanation: 'El abogado actúa por negligencia por voluntad perezosa: sabe de su deber profesional y ético de defender la vida de su cliente, pero lo omite por priorizar su descanso personal.',
+      options_hint: 'El defensor abdica de su deber ético más crucial por comodidad y desidia personal.',
     }
   ]
 };
