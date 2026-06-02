@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
     const ragContext = await loadKnowledgeBase();
 
     let response;
+    let geminiErrorMsg: string | null = null;
     try {
       // Try to generate Socratic response using Gemini
       response = await generateSocraticResponse({
@@ -78,8 +79,9 @@ export async function POST(req: NextRequest) {
         ragContext,
         customApiKey: custom_api_key,
       });
-    } catch (geminiError) {
+    } catch (geminiError: any) {
       console.warn('[Chat API] Gemini SDK failed, falling back to static dialogue:', geminiError);
+      geminiErrorMsg = geminiError?.message || String(geminiError);
       // Fallback inside API to prevent 500 errors
       response = getFallbackSocraticResponse(
         turn,
@@ -140,14 +142,16 @@ export async function POST(req: NextRequest) {
       student_was_correct: studentWasCorrect,
       turn_number: turn,
       rag_loaded: !!ragContext,
+      gemini_error: geminiErrorMsg,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Chat API] Global critical Error:', error);
     
     // In case of any critical crash, fallback immediately to prevent app blocking
     const ageNum = parseInt(age || '13') || 13;
     const turn = parseInt(turn_number || '1') || 1;
     const studentWasCorrect = selected_answer === correct_answer;
+    const geminiErrorMsg = error?.message || String(error);
     
     const fallbackResponse = getFallbackSocraticResponse(
       turn,
@@ -164,6 +168,7 @@ export async function POST(req: NextRequest) {
       turn_number: turn,
       rag_loaded: false,
       is_fallback_emergency: true,
+      gemini_error: geminiErrorMsg,
     });
   }
 }

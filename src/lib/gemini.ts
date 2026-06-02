@@ -196,14 +196,13 @@ export async function generateSocraticResponse(params: {
     return getFallbackSocraticResponse(params.turnNumber, params.age, params.selectedAnswer, params.correctAnswer);
   }
 
-  try {
-    const client = new GoogleGenerativeAI(activeKey);
-    const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const langName = LANGUAGE_NAMES[params.language] || 'Spanish';
-    const { level, tutorInstructions, label } = getAgeLevel(params.age);
-    const ragSection = params.ragContext
-      ? `\nACADEMIC FRAMEWORK:\n${params.ragContext.slice(0, 6000)}`
-      : '';
+  const client = new GoogleGenerativeAI(activeKey);
+  const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const langName = LANGUAGE_NAMES[params.language] || 'Spanish';
+  const { level, tutorInstructions, label } = getAgeLevel(params.age);
+  const ragSection = params.ragContext
+    ? `\nACADEMIC FRAMEWORK:\n${params.ragContext.slice(0, 6000)}`
+    : '';
 
     const historyText = params.history
       .map((t) => `${t.role === 'tutor' ? 'TUTOR' : 'STUDENT'}: ${t.message}`)
@@ -335,10 +334,6 @@ Respond ONLY with valid JSON:
     // Enforce strict deterministic evaluation of correctness on backend side
     parsed.student_was_correct = params.selectedAnswer === params.correctAnswer;
     return parsed;
-  } catch (error) {
-    console.error('[Gemini] Socratic response error:', error);
-    return getFallbackSocraticResponse(params.turnNumber, params.age, params.selectedAnswer, params.correctAnswer);
-  }
 }
 
 // ── Fallbacks ────────────────────────────────────────────────
@@ -570,13 +565,26 @@ export function getFallbackSocraticResponse(
         message = `Correcto. La clasificación del dilema es efectivamente "${answerLabelCorrect}". A través de tu análisis has identificado correctamente la intencionalidad y las circunstancias éticas del caso, demostrando un excelente discernimiento moral.`;
       }
     } else {
-      // Correcting the student clearly, providing reasons and definitions
+      // Dynamic fallback explanation based on the correct answer category
+      let explanationDetail = '';
+      if (correctAnswer === 'moral') {
+        explanationDetail = 'el agente realiza una acción voluntaria orientada al bien y de acuerdo con su deber moral, sin intenciones ocultas de hacer daño.';
+      } else if (correctAnswer === 'inmoral') {
+        explanationDetail = 'el agente actúa con plena conciencia de la norma y con la intención deliberada de violarla o causar daño para su beneficio personal.';
+      } else if (correctAnswer === 'amoral') {
+        explanationDetail = 'la acción queda fuera de la valoración moral, tratándose de un acto biológico, instintivo o puramente natural (como la reacción de un animal o un reflejo involuntario).';
+      } else if (correctAnswer === 'negligente') {
+        explanationDetail = 'el agente tiene conocimiento de su deber y de los medios para cumplirlo, pero desiste de actuar por comodidad, flojera o pereza de la voluntad (Akrasia).';
+      } else if (correctAnswer === 'ignorancia') {
+        explanationDetail = 'el agente actúa sin conocer la norma, pero era una ignorancia vencible porque podría haberla conocido con un esfuerzo razonable de investigación.';
+      }
+
       if (level === 1) {
-        message = `Buen intento, pero elegiste "${answerLabelSelected}" cuando la respuesta correcta era "${answerLabelCorrect}". Recuerda: en este caso el personaje sabía cuál era su deber pero no lo hizo simplemente por flojera (Negligencia), no porque quisiera hacer daño directo (Inmoral). ¡La próxima te irá mejor!`;
+        message = `Buen intento, pero elegiste "${answerLabelSelected}" cuando la respuesta correcta era "${answerLabelCorrect}". Recuerda: en este caso ${explanationDetail} ¡La próxima te irá mejor!`;
       } else if (level === 2) {
-        message = `Gracias por tu razonamiento, pero hay un error: clasificaste el caso como "${answerLabelSelected}" y la respuesta correcta es "${answerLabelCorrect}". Esto se debe a que el personaje conocía su deber moral y omitió actuar por comodidad o desidia (negligencia de la voluntad). No hubo una intención maliciosa directa (inmoralidad), sino debilidad ante el esfuerzo.`;
+        message = `Gracias por tu razonamiento, pero hay un error: clasificaste el caso como "${answerLabelSelected}" y la respuesta correcta es "${answerLabelCorrect}". Esto se debe a que en esta situación ${explanationDetail}`;
       } else {
-        message = `Tu clasificación fue "${answerLabelSelected}", pero la resolución correcta es "${answerLabelCorrect}". Debemos precisar que no hay una conducta inmoral activa (donde el agente actúa deliberadamente para dañar o violar la ley moral), sino una conducta negligente por voluntad perezosa (Akrasia): el agente tiene pleno conocimiento del deber y de los medios para actuar, pero omite su deber por comodidad personal.`;
+        message = `Tu clasificación fue "${answerLabelSelected}", pero la resolución correcta es "${answerLabelCorrect}". Debemos precisar que en este caso ${explanationDetail}`;
       }
     }
 
