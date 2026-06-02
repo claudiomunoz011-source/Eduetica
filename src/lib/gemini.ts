@@ -209,56 +209,66 @@ export async function generateSocraticResponse(params: {
       .map((t) => `${t.role === 'tutor' ? 'TUTOR' : 'STUDENT'}: ${t.message}`)
       .join('\n');
 
-    const isFinalTurn = params.turnNumber >= 3;
+    let systemInstructions = '';
 
-    const systemInstructions = isFinalTurn
-      ? `
-You are a Socratic ethics tutor. This is TURN 3 (FINAL VERDICT).
+    if (params.turnNumber >= 6) {
+      // Force final verdict at turn 6
+      systemInstructions = `
+You are a Socratic ethics tutor and logic teacher. This is the FINAL VERDICT (maximum turns reached).
 ${tutorInstructions}
 ${ragSection}
 
-Here are the strict ethical definitions you must apply:
+Strict ethical definitions to apply:
 - moral: intentionally good act.
 - inmoral: intentionally bad/harmful act.
 - amoral: outside the moral domain (natural, instinctive).
-- negligente: knows the duty but fails to act out of laziness/convenience.
+- negligente: knows the duty but fails to act out of laziness/convenience (Akrasia).
 - ignorancia: could have known with reasonable effort but did not bother.
 
-NOW you must reveal the verdict. Base it strictly on the academic framework above.
-The student classified the conduct as: "${ANSWER_LABELS[params.selectedAnswer]}"
+The student originally classified the conduct as: "${ANSWER_LABELS[params.selectedAnswer]}"
 The correct classification is: "${ANSWER_LABELS[params.correctAnswer]}"
 
-CRITICAL CORRECTION RULES:
-- If the student's selected answer is INCORRECT (selected: ${params.selectedAnswer}, correct: ${params.correctAnswer}) OR if their arguments during the chat failed to show adequate understanding, you MUST explicitly correct them.
-- In your response, clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it directly with their incorrect selection to show why they were wrong.
-- Explain the key distinction (e.g. why it is Negligente due to laziness/apathy rather than Immoral which requires active malice/bad intent).
-- Keep a kind and encouraging tone, but ensure the student gets a clear, unambiguous explanation of their error and the correct logic.
-- Write in ${langName}.
-- Match the vocabulary level: ${label}.
+Now, act as a logic teacher and deliver the final verdict:
+1. Provide a final evaluation of the student's arguments across the dialogue.
+2. In your response, clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it directly with their choice if they were wrong.
+3. Keep an encouraging but clear educational tone.
+4. Write in ${langName}.
+5. Match the vocabulary level: ${label}.
 
-Then evaluate: based on the entire dialogue, did the student demonstrate understanding of the concept?
+Evaluate: based on the entire dialogue, did the student demonstrate a clear understanding of the concept?
 Set "understood": true if the student showed genuine comprehension in their arguments (even if they initially chose wrong).
 Set "student_was_correct": true if their ORIGINAL selected answer matches the correct answer.
 
 Respond ONLY with valid JSON:
 {
-  "message": "<full verdict message in ${langName}>",
+  "message": "<your final verdict message in ${langName}>",
   "is_final": true,
   "understood": <true|false>,
   "student_was_correct": <true|false>
-}`
-      : `
-You are a Socratic ethics tutor. This is TURN ${params.turnNumber} of 3.
+}`;
+    } else if (params.turnNumber <= 3) {
+      // Force Socratic question (turns 1, 2, 3)
+      const isTurn1 = params.turnNumber === 1;
+      systemInstructions = `
+You are a Socratic ethics tutor and logic teacher. This is Turn ${params.turnNumber} of the dialogue.
 ${tutorInstructions}
 ${ragSection}
 
 STRICT RULES:
-- Do NOT reveal whether the student's answer is correct or incorrect.
+- Do NOT reveal whether the student's original classification choice is correct or incorrect yet. Keep them in suspense.
 - Do NOT use phrases like "you're right", "that's wrong", "the correct answer is...".
-- Ask ONE probing question that challenges the student's reasoning.
-- Ask questions that help them distinguish between active malice (inmoral) vs. omission/laziness (negligente) if relevant.
-- Build on their previous answer.
 - Write in ${langName}.
+- Match the vocabulary level: ${label}.
+
+ROLE AS A LOGIC TEACHER:
+${isTurn1 ? `
+- This is the beginning of the chat. The student just selected their answer choice: "${ANSWER_LABELS[params.selectedAnswer]}".
+- Ask the FIRST probing question to get the student to justify their decision. Ask them to explain the reasoning, intent, or principles behind their choice.
+` : `
+- Read the student's latest message: "${params.studentMessage}"
+- First, write a brief comment (1-2 sentences) evaluating the logical validity of their argument. Point out if it is logically sound (solid) or if there are weaknesses, contradictions, fallacies, or gaps in their reasoning (weak). Act as an educational logic teacher helping them learn how to construct solid arguments.
+- Then, ask a coherent follow-up question that builds on their response and challenges them to think deeper or distinguish key concepts (e.g. active malice vs. laziness of will, or consequences vs. intent).
+`}
 
 DILEMMA: ${params.dilemmaScenario}
 STUDENT'S CLASSIFICATION: "${ANSWER_LABELS[params.selectedAnswer]}" (do NOT mention if correct)
@@ -266,17 +276,52 @@ STUDENT'S CLASSIFICATION: "${ANSWER_LABELS[params.selectedAnswer]}" (do NOT ment
 CONVERSATION SO FAR:
 ${historyText}
 
-STUDENT'S LATEST MESSAGE: "${params.studentMessage}"
-
-Turn ${params.turnNumber} of 3 — ${params.turnNumber === 1 ? 'Ask the FIRST probing question about their reasoning.' : 'Ask a DEEPER follow-up question, pressing for more rigorous justification.'}
-
 Respond ONLY with valid JSON:
 {
-  "message": "<your Socratic question in ${langName}>",
+  "message": "<your logic comment (if not Turn 1) + Socratic question in ${langName}>",
   "is_final": false,
   "understood": null,
   "student_was_correct": null
 }`;
+    } else {
+      // Dynamic Turn 4 or 5: The tutor can choose to continue (ask next question) or finalize (give verdict)
+      systemInstructions = `
+You are a Socratic ethics tutor and logic teacher. This is Turn ${params.turnNumber} (dynamic choice to continue or finalize).
+${tutorInstructions}
+${ragSection}
+
+Strict ethical definitions to apply:
+- moral: intentionally good act.
+- inmoral: intentionally bad/harmful act.
+- amoral: outside the moral domain (natural, instinctive).
+- negligente: knows the duty but fails to act out of laziness/convenience (Akrasia).
+- ignorancia: could have known with reasonable effort but did not bother.
+
+The student originally classified the conduct as: "${ANSWER_LABELS[params.selectedAnswer]}"
+The correct classification is: "${ANSWER_LABELS[params.correctAnswer]}"
+
+DILEMMA: ${params.dilemmaScenario}
+CONVERSATION SO FAR:
+${historyText}
+STUDENT'S LATEST MESSAGE: "${params.studentMessage}"
+
+YOUR DYNAMIC CHOICE:
+Evaluate the student's argument. You can choose to EITHER:
+A) Continue the dialogue (if you feel a further question would help their learning, or if their reasoning is still incomplete/needs challenge).
+   In this case, set "is_final": false. Write a brief comment on the logic of their argument (solid or weak) and ask the next probing question.
+B) Finalize the dialogue (if they have successfully justified their answer, or if they are stuck/repeating themselves and further turns won't help).
+   In this case, set "is_final": true. Deliver the final verdict: clearly state the CORRECT classification, explain why it is correct based on the academic framework, and contrast it with their choice. Evaluate "understood": true/false based on their reasoning.
+
+Write in ${langName} matching the vocabulary level: ${label}.
+
+Respond ONLY with valid JSON:
+{
+  "message": "<your next question OR your final verdict in ${langName}>",
+  "is_final": <true|false>,
+  "understood": <true|false|null depending on is_final>,
+  "student_was_correct": <true|false|null depending on is_final>
+}`;
+    }
 
     const result = await model.generateContent(systemInstructions);
     const text = result.response.text().replace(/```json\n?|```\n?/g, '').trim();
@@ -409,8 +454,8 @@ export function getFallbackSocraticResponse(
   correctAnswer?: string
 ): SocraticResponse {
   const { level } = getAgeLevel(age);
-  const turn = Math.min(turnNumber, 3);
-  const isFinal = turn === 3;
+  const turn = Math.min(turnNumber, 4);
+  const isFinal = turn === 4;
 
   if (isFinal && selectedAnswer && correctAnswer) {
     const isCorrect = selectedAnswer === correctAnswer;
@@ -440,12 +485,12 @@ export function getFallbackSocraticResponse(
     return {
       message,
       is_final: true,
-      understood: isCorrect, // If correct, understood is true. In real API Gemini evaluates it dynamically
+      understood: isCorrect,
       student_was_correct: isCorrect,
     };
   }
 
-  // Turn 1 or 2 fallback question pools
+  // Turn 1, 2 or 3 fallback question pools
   const pools: Record<number, Record<number, string[]>> = {
     1: {
       1: [
@@ -481,9 +526,26 @@ export function getFallbackSocraticResponse(
         '¿Cómo distinguirías en este caso entre actuar por deber y actuar meramente conforme al deber?'
       ],
     },
+    3: {
+      1: [
+        '¿Puedes resumir tu argumento en una frase muy simple?',
+        '¿Crees que el personaje actuó libremente o estaba obligado por las circunstancias?',
+        '¿Qué pasaría si la decisión del personaje afectara a personas muy cercanas?'
+      ],
+      2: [
+        '¿Cuál crees que es la diferencia clave en este caso entre hacer lo correcto y hacer lo que es más fácil?',
+        '¿Qué valor ético crees que tiene más peso en esta situación y por qué?',
+        'Si todos en la sociedad actuaran de la misma manera que el personaje, ¿qué tipo de convivencia tendríamos?'
+      ],
+      3: [
+        '¿Cómo justificarías esta acción desde una perspectiva que valore la responsabilidad por sobre las consecuencias?',
+        '¿Qué deber moral fundamental crees que está en conflicto en este dilema?',
+        '¿Qué contraargumento le darías a alguien que sostenga la postura contraria a la tuya?'
+      ]
+    }
   };
 
-  const pool = pools[turn]?.[level] || ['¿Puedes detallar más tu razonamiento?'];
+  const pool = pools[turn]?.[level] || pools[2]?.[level] || ['¿Puedes detallar más tu razonamiento?'];
   const message = pool[Math.floor(Math.random() * pool.length)];
 
   return {

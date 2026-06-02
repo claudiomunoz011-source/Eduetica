@@ -263,7 +263,7 @@ export default function SocraticChat({
   if (!isOpen) return null;
 
   // ── Progress indicator ────────────────────────────────────
-  const maxTurns = 3;
+  const maxTurns = 5;
   const progressPct = Math.min((turnNumber / maxTurns) * 100, 100);
   const progressColor = isFinished ? '#06D6A0' : 'var(--accent)';
 
@@ -307,7 +307,7 @@ export default function SocraticChat({
                 {isKid ? 'Profe IA' : 'Tutor Socrático'}
               </p>
               <p className="text-white text-xs opacity-80">
-                {isFinished ? '✅ Diálogo completado' : `Turno ${turnNumber} de ${maxTurns}`}
+                {isFinished ? '✅ Diálogo completado' : `Pregunta ${turnNumber} (Máx: 5)`}
               </p>
             </div>
           </div>
@@ -328,7 +328,7 @@ export default function SocraticChat({
               />
               <text x="22" y="27" textAnchor="middle" fontSize="11"
                 fontWeight="bold" fill="white">
-                {isFinished ? '✓' : `${turnNumber}/${maxTurns}`}
+                {isFinished ? '✓' : `${turnNumber}`}
               </text>
             </svg>
 
