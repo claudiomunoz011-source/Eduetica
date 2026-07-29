@@ -661,3 +661,109 @@ export function getFallbackSocraticResponse(
     student_was_correct: undefined,
   };
 }
+
+// ── Multiplayer Debate Argument Evaluator ─────────────────────
+
+export async function evaluateMultiplayerArgument(params: {
+  roomCode: string;
+  topic: string;
+  dilemmaScenario: string;
+  correctAnswer: AnswerType;
+  selectedAnswer: AnswerType;
+  argumentText: string;
+  studentName: string;
+  studentAge: number;
+  language?: string;
+  customApiKey?: string;
+}) {
+  const activeKey = params.customApiKey || GEMINI_API_KEY;
+  if (!activeKey) {
+    return getFallbackArgumentEvaluation(params.selectedAnswer, params.correctAnswer, params.argumentText);
+  }
+
+  try {
+    const client = new GoogleGenerativeAI(activeKey);
+    const model = client.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const langName = LANGUAGE_NAMES[params.language || 'es'] || 'Spanish';
+    const answerLabelSelected = ANSWER_LABELS[params.selectedAnswer] || params.selectedAnswer;
+    const answerLabelCorrect = ANSWER_LABELS[params.correctAnswer] || params.correctAnswer;
+
+    const prompt = `
+You are a firm, fair, and encouraging Socratic Ethics Debate Judge evaluating a student's ethical argument in a multiplayer debate competition.
+
+Dilemma Scenario:
+"${params.dilemmaScenario}"
+
+Correct Ethical Classification: "${answerLabelCorrect}"
+Student's Classification: "${answerLabelSelected}"
+Student's Name: "${params.studentName}"
+Student's Age: ${params.studentAge} years old
+
+Student's Argument:
+"${params.argumentText}"
+
+Evaluation Criteria (Score 0 - 100 pts):
+1. Classification Accuracy: Did they select the correct category? (+30 pts baseline if correct).
+2. Logical Coherence & Depth: Did they justify their position with clear premises and non-fallacious reasoning? (up to 40 pts).
+3. Moral Concept Application: Did they reference duty, intention, consequences, or circumstances accurately? (up to 20 pts).
+4. Clarity & Argumentative Rigor: Is the argument well-structured and relevant to the dilemma? (up to 10 pts).
+
+IMPORTANT:
+- Write in ${langName}.
+- Be direct, constructive, and educational.
+- Give an honest score matching the criteria (0 to 100).
+- Format output as JSON strictly (no markdown code fences):
+{
+  "score": <number between 0 and 100>,
+  "congratulations": "<1-2 sentences in ${langName} praising strong points of the argument>",
+  "corrections": "<1-2 sentences in ${langName} pointing out logical gaps, fallacies, or misclassifications>",
+  "suggestions": "<1-2 sentences in ${langName} giving concrete advice on how to improve this argument>",
+  "verdictSummary": "<1 sentence overall assessment of this student's argument in the debate>"
+}
+`;
+
+    const result = await model.generateContent(prompt);
+    const text = result.response.text().replace(/```json\n?|```\n?/g, '').trim();
+    const parsed = JSON.parse(text);
+    
+    // Ensure bounds
+    parsed.score = Math.max(0, Math.min(100, Math.round(Number(parsed.score) || 50)));
+    return parsed;
+  } catch (error) {
+    console.error('[Gemini] Multiplayer evaluation error:', error);
+    return getFallbackArgumentEvaluation(params.selectedAnswer, params.correctAnswer, params.argumentText);
+  }
+}
+
+export function getFallbackArgumentEvaluation(
+  selected: AnswerType,
+  correct: AnswerType,
+  argumentText: string
+) {
+  const isCorrect = selected === correct;
+  const lengthBonus = Math.min(30, Math.floor((argumentText?.length || 0) / 5));
+  let baseScore = isCorrect ? 60 : 30;
+  const finalScore = Math.min(95, baseScore + lengthBonus);
+
+  const selLabel = ANSWER_LABELS[selected] || selected;
+  const corLabel = ANSWER_LABELS[correct] || correct;
+
+  if (isCorrect) {
+    return {
+      score: finalScore,
+      congratulations: `👏 ¡Excelente trabajo! Acertaste en clasificar el caso como "${corLabel}" y tu argumento refleja una buena intuición ética sobre la intencionalidad de la acción.`,
+      corrections: `No hay errores conceptuales graves en la selección de la categoría, aunque puedes profundizar aún más en las consecuencias morales.`,
+      suggestions: `💡 Para alcanzar un puntaje perfecto, respalda tu postura con un principio moral explícito (como el deber, la virtud o la justicia).`,
+      verdictSummary: `Argumento sólido y acertado en la clasificación moral.`
+    };
+  } else {
+    return {
+      score: finalScore,
+      congratulations: `👏 Se valora tu esfuerzo por estructurar una justificación escrita y defender tu punto de vista en el debate.`,
+      corrections: `❌ La clasificación seleccionada fue "${selLabel}", pero la resolución ética correcta era "${corLabel}". Confundiste los elementos determinantes de la intención o responsabilidad.`,
+      suggestions: `💡 Revisa si el personaje actuó por ignorancia, pereza de la voluntad o intención deliberada antes de clasificar su conducta.`,
+      verdictSummary: `Buen intento de argumentación, pero requiere ajustar la precisión en la categoría ética.`
+    };
+  }
+}
+

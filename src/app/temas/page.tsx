@@ -136,6 +136,21 @@ export default function TemasPage() {
               <p className="text-base" style={{ color: 'var(--text-secondary)' }}>{t('subtitle')}</p>
             </>
           )}
+
+          {/* Multiplayer Banner */}
+          <div className="mt-6 inline-flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-purple-900/40 via-cyan-900/40 to-blue-900/40 border border-cyan-500/40 shadow-xl max-w-2xl mx-auto">
+            <div className="text-3xl">⚔️</div>
+            <div className="text-left flex-1">
+              <div className="text-sm font-bold text-white">¿Quieres competir con tus compañeros?</div>
+              <div className="text-xs text-slate-300">Entra al Modo Debate Multijugador, argumenta en vivo y deja que la IA elija al ganador.</div>
+            </div>
+            <button
+              onClick={() => router.push('/debate')}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg shadow-cyan-500/30 transition-all active:scale-95 whitespace-nowrap"
+            >
+              ⚔️ Entrar a la Arena Multijugador
+            </button>
+          </div>
         </div>
 
         {/* Topic Grid */}
